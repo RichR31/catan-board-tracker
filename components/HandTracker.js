@@ -84,7 +84,7 @@ export default function HandTracker() {
           flexWrap: "wrap",
           justifyContent: "center",
           gap: "6px 10px",
-          marginBottom: 10,
+          marginBottom: 30,
         }}
       >
         {RESOURCES.map((r) => (

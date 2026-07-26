@@ -195,17 +195,17 @@ export default function BoardTracker() {
   const offsetY = PADDING - base.bounds.minY;
 
   return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "row-reverse" }}>
+    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "row-reverse", gap: 60, justifyContent: "between", alignItems: "flex-start" }}>
 
       <div
         style={{
           display: "flex",
-          width: 150,
+          width: 160,
           height: "100%",
           flexDirection: "column",
           flexWrap: "wrap",
           justifyContent: "center",
-          itemsAlign: "center",
+          alignItems: "center",
           gap: 6,
           marginBottom: 12,
         }}
@@ -315,11 +315,16 @@ export default function BoardTracker() {
       <div
         style={{
           background: "var(--water)",
-          borderRadius: 12,
-          padding: 8,
-          height: "720px",
-          width: "720px",
+          padding: 0,
+          paddingRight: 50,
+          display: "flex-column",
+          gap: 16,
+          justifyContent: "center",
+          alignItems: "center",
+          height: "700px",
+          width: "700px",
           marginBottom: 16,
+          border: "1px solid var(--panel-line)",
         }}
       >
         <svg
@@ -328,6 +333,7 @@ export default function BoardTracker() {
           aria-label="Catan board layout with tiles, roads, and buildings"
           style={{ width: "100%", height: "auto", display: "block" }}
         >
+          
           <g transform={`translate(${offsetX} ${offsetY})`}>
             {tiles.map((tile) => {
               const colors = RESOURCE_COLORS[tile.resource];
@@ -338,9 +344,8 @@ export default function BoardTracker() {
                   <polygon
                     points={points}
                     fill={colors.fill}
-                    stroke="var(--ink)"
-                    strokeOpacity="0.25"
-                    strokeWidth="1"
+                    stroke="#d7da98"
+                    strokeWidth="7"
                   />
                   <image
                     href={RESOURCE_IMAGES[tile.resource]}
@@ -358,8 +363,6 @@ export default function BoardTracker() {
                         cy={tile.cy+22}
                         r="14"
                         fill="var(--panel)"
-                        stroke="var(--ink)"
-                        strokeWidth="0.5"
                       />
                       <text
                         x={tile.cx}
@@ -372,24 +375,34 @@ export default function BoardTracker() {
                       >
                         {tile.number}
                       </text>
-                      {pips > 0 && (
-                        <text
-                          x={tile.cx}
-                          y={tile.cy + 14}
-                          textAnchor="middle"
-                          fontSize="6"
-                          letterSpacing="1"
-                          fill="var(--ink-soft)"
-                        >
-                          {"•".repeat(pips)}
-                        </text>
+                     {pips > 0 && (
+                        <g>
+                          {Array.from({ length: pips }).map((_, i) => {
+                            const arcRadius = 9;
+                            const spreadDeg = 80;
+                            const startDeg = 90 - spreadDeg / 2;
+                            const angleDeg = pips > 1 ? startDeg + (spreadDeg * i) / (pips - 1) : 90;
+                            const angleRad = (angleDeg * Math.PI) / 180;
+                            const centerX = tile.cx;
+                            const centerY = tile.cy + 22;
+                            return (
+                              <circle
+                                key={i}
+                                cx={centerX + arcRadius * Math.cos(angleRad)}
+                                cy={centerY + arcRadius * Math.sin(angleRad)}
+                                r="1.2"
+                                fill="var(--ink-soft)"
+                              />
+                            );
+                          })}
+                        </g>
                       )}
                     </g>
                   )}
                   {robberTileId === tile.id && (
                     <circle
                       cx={tile.cx}
-                      cy={tile.cy+24}
+                      cy={tile.cy+22}
                       r="14"
                       fill="gray"
                       stroke="var(--panel)"
@@ -403,40 +416,36 @@ export default function BoardTracker() {
             {ports.map((port) => {
               const isGeneric = port.type === "3:1";
               const colors = isGeneric ? null : RESOURCE_COLORS[port.type];
+              const angle = Math.atan2(port.ey2 - port.ey1, port.ex2 - port.ex1) * (180 / Math.PI);
+              const rotation = `rotate(${angle} ${port.x} ${port.y})`;
+
+              const halfLength = 32;
+              const bulge = 20;
+
               return (
                 <g
                   key={port.id}
                   onClick={() => handlePortClick(port)}
                   style={{ cursor: mode === "ports" ? "pointer" : "default" }}
                 >
-                  <line
-                    x1={port.ex1}
-                    y1={port.ey1}
-                    x2={port.x}
-                    y2={port.y}
-                    stroke="var(--ink)"
-                    strokeOpacity="0.45"
-                    strokeWidth="2"
-                    strokeDasharray="4 3"
-                  />
-                  <line
-                    x1={port.ex2}
-                    y1={port.ey2}
-                    x2={port.x}
-                    y2={port.y}
-                    stroke="var(--ink)"
-                    strokeOpacity="0.45"
-                    strokeWidth="2"
-                    strokeDasharray="4 3"
-                  />
-                  <circle
-                    cx={port.x}
-                    cy={port.y}
-                    r="13"
+                  <line x1={port.ex1} y1={port.ey1} x2={port.x} y2={port.y}
+                    stroke="var(--ink)" strokeOpacity="0.45" strokeWidth="2" strokeDasharray="4 3" />
+                  <line x1={port.ex2} y1={port.ey2} x2={port.x} y2={port.y}
+                    stroke="var(--ink)" strokeOpacity="0.45" strokeWidth="2" strokeDasharray="4 3" />
+
+                  <path
+                    d={`M ${port.x - halfLength} ${port.y}
+                        Q ${port.x} ${port.y - bulge} ${port.x + halfLength} ${port.y}
+                        Q ${port.x} ${port.y + bulge} ${port.x - halfLength} ${port.y}
+                        Z`}
                     fill={isGeneric ? "var(--panel)" : colors.fill}
                     stroke="var(--ink)"
                     strokeWidth="1"
+                    transform={rotation}
                   />
+
+                  
+
                   <text
                     x={port.x}
                     y={port.y + 3.5}
@@ -444,9 +453,22 @@ export default function BoardTracker() {
                     fontSize="8"
                     fontWeight="600"
                     fill={isGeneric ? "var(--ink)" : colors.ink}
+                    color='black'
+                    transform={rotation}
                   >
                     {isGeneric ? "3:1" : "2:1"}
                   </text>
+
+                  {!isGeneric && (
+                    <image
+                      href={`${port.type}.svg`}
+                      x={port.x-12 }
+                      y={port.y-25}
+                      width="22"
+                      height="22"
+                      transform={rotation}
+                    />
+                  )}
                 </g>
               );
             })}
@@ -460,8 +482,8 @@ export default function BoardTracker() {
                   y1={edge.y1}
                   x2={edge.x2}
                   y2={edge.y2}
-                  stroke={player ? player.color : "var(--panel-line)"}
-                  strokeWidth={player ? 5 : 1}
+                  stroke={player ? player.color : "transparent"}
+                  strokeWidth={player ?7 : 1}
                   strokeLinecap="round"
                 />
               );
@@ -472,23 +494,21 @@ export default function BoardTracker() {
               return (
                 <g key={vertex.id}>
                   {player && vertex.building.type === "settlement" && (
-                    <circle
-                      cx={vertex.x}
-                      cy={vertex.y}
-                      r="6"
+                    <path
+                      d="M 0,150 L 0,70 Q 0,60 7.59,53.49 L 62.41,6.51 Q 70,0 77.59,6.51 L 132.41,53.49 Q 140,60 140,70 L 140,150 Q 140,160 130,160 L 10,160 Q 0,160 0,150 Z"
+                      transform={`translate(${vertex.x}, ${vertex.y}) scale(0.1) translate(-70, -80)`}
                       fill={player.color}
-                      stroke="var(--ink)"
-                      strokeWidth="1"
+                      stroke="#d7da98"
+                      vectorEffect="non-scaling-stroke"
+                      strokeWidth="1.5"
                     />
                   )}
                   {player && vertex.building.type === "city" && (
-                    <rect
-                      x={vertex.x - 6}
-                      y={vertex.y - 6}
-                      width="12"
-                      height="12"
+                    <path
+                      d="M -10,7.4 L -10,0.6 Q -10,0 -9.6159,-0.4610 L -5.3841,-5.5390 Q -5,-6 -4.6159,-5.5390 L -0.3841,-0.4610 Q 0,0 0,-0.6 L 0,-9.4 Q 0,-10 0.6,-10 L 7.4,-10 Q 8,-10 8,-9.4 L 8,7.4 Q 8,8 7.4,8 L -9.4,8 Q -10,8 -10,7.4 Z"
+                      transform={`translate(${vertex.x}, ${vertex.y})`}
                       fill={player.color}
-                      stroke="var(--ink)"
+                      stroke="#d7da98"
                       strokeWidth="1"
                     />
                   )}
@@ -524,12 +544,12 @@ export default function BoardTracker() {
           </g>
         </svg>
 
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center"}}>
             <button
               onClick={resetBoard}
               style={{
                 background: "transparent",
-                border: "1px solid var(--panel-line)",
+                border: "1px solid white",
                 borderRadius: 6,
                 padding: "6px 12px",
                 fontSize: 13,

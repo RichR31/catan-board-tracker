@@ -17,11 +17,10 @@ export default function Home() {
           height: "100vh",
           maxHeight: "100vh",
           overflow: "hidden",
-          borderRight: "1px solid var(--panel-line)",
           display: "flex",
           flexDirection: "column",
-          borderRight: "1px solid var(--panel-line)",
-          padding: "40px 24px",
+          paddingLeft: 16,
+          paddingRight: 16,
         }}
       >
         <HandTracker />
@@ -32,11 +31,11 @@ export default function Home() {
           height: "100%",
           maxHeight: "100vh",
           overflow: "hidden",
-          border: "1px solid var(--panel-line)",
           minWidth: 400,
           display: "flex",
           flexDirection: "column",
-          flex: 1
+          flex: 1,
+          padding: 0
         }}
       >
         <BoardTracker />
