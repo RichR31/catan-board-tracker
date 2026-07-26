@@ -5,6 +5,8 @@ game of Catan — handy for a remote player following along over a board cam.
 
 ## Run it
 
+Icons were downloaded from https://game-icons.net/tags/catan.html
+
 ```bash
 npm install
 npm run dev
