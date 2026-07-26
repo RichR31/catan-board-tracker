@@ -1,0 +1,68 @@
+:root {
+  --ink: #2b2620;
+  --ink-soft: #6b5d46;
+  --page-bg: #d8cba3;
+  --panel: #f2e9d0;
+  --panel-line: #c9b98a;
+
+  --wood: #3f5d3a;
+  --wood-ink: #eef3ea;
+  --brick: #b0472a;
+  --brick-ink: #fbece7;
+  --sheep: #7f9c5c;
+  --sheep-ink: #eef2e6;
+  --wheat: #c98f1e;
+  --wheat-ink: #fdf1dc;
+  --ore: #55585c;
+  --ore-ink: #ecedee;
+
+  --dev-bg: #e2d3a0;
+  --dev-ink: #3a2f1c;
+
+  --desert: #ddc98a;
+  --desert-ink: #4a3f22;
+
+  --player-red: #a5342f;
+  --player-blue: #2b5578;
+  --player-orange: #b56a1e;
+  --player-white: #f2ead2;
+
+  --water: #a9c2c4;
+
+  --shadow: 0 1px 0 rgba(43, 38, 32, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--page-bg);
+  background-image: radial-gradient(circle at 1px 1px, rgba(43, 38, 32, 0.06) 1px, transparent 0);
+  background-size: 18px 18px;
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
