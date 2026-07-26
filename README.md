@@ -1,11 +1,14 @@
 # Catan hand tracker
 
 A small Next.js app for tracking your resource and development cards during a
-game of Catan — handy for a remote player following along over a board cam.
+game of Catan. Niche, but handy for a remote player following along over a board cam. 
+I made this for a friend. I would share my screen with him, and updated it as the game goes on, so that he would know what is happening in the game.
+
+Icons were downloaded from https://game-icons.net/tags/catan.html
+
 
 ## Run it
 
-Icons were downloaded from https://game-icons.net/tags/catan.html
 
 ```bash
 npm install
